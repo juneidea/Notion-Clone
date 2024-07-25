@@ -1,11 +1,22 @@
-// import { jwtDecode } from "jwt-decode";
 import { jwtDecode } from "jwt-decode";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../app/api";
 
 export const useDjangoAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const defaultUser = { id: -1, username: "" };
+  const [user, setUser] = useState(defaultUser);
+
+  useEffect(() => {
+    checkToken();
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      getCurrentUser();
+    }
+  }, [isAuthenticated]);
 
   const auth = async (
     e: React.FormEvent<HTMLFormElement>,
@@ -43,14 +54,53 @@ export const useDjangoAuth = () => {
       setIsLoading(false);
       return;
     }
+    if (isTokenActive(token)) {
+      setIsAuthenticated(true);
+    } else {
+      await checkRefreshToken();
+      const secondToken = localStorage.getItem("access");
+      if (secondToken && isTokenActive(secondToken)) {
+        setIsAuthenticated(true);
+      }
+    }
+    setIsLoading(false);
+  };
+
+  const isTokenActive = (token: string) => {
     const decoded = jwtDecode(token);
     const tokenExpiration = decoded.exp!!;
     const now = Date.now() / 1000;
-    if (tokenExpiration > now) {
-      setIsAuthenticated(true);
-      setIsLoading(false);
+    return tokenExpiration > now;
+  };
+
+  const checkRefreshToken = async () => {
+    const refresh = localStorage.getItem("refresh");
+    try {
+      const res = await api.post("/api/token/refresh/", { refresh });
+      localStorage.setItem("access", res.data.access);
+    } catch (error) {
+      const errorMsg =
+        error instanceof Error ? error.message : "there is an error";
+      if (!errorMsg.includes("401")) {
+        alert(errorMsg);
+      }
     }
   };
 
-  return { isAuthenticated, isLoading, auth, checkToken };
+  const getCurrentUser = async () => {
+    try {
+      const res = await api.get("/api/user/");
+      setUser(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem("refresh");
+    localStorage.removeItem("access");
+  };
+
+  return { isAuthenticated, isLoading, user, auth, checkToken, logout };
 };
