@@ -1,15 +1,19 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
 import Image from "next/image";
-import { useDjangoAuth } from "../../../../hooks/use-django-auth";
+import { PlusCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useDjangoAuth } from "@/hooks/use-django-auth";
+import { useDocumentsMutate } from "@/hooks/use-documents-mutate";
 
 const DocumentsPage = () => {
   const { user } = useDjangoAuth();
   const userName = user
     ? user.username.charAt(0).toUpperCase() + user.username.slice(1)
     : "Anonymous";
+
+  const { onCreate } = useDocumentsMutate();
+
   return (
     <div className="h-full flex flex-col items-center justify-center space-y-4">
       <Image
@@ -23,7 +27,7 @@ const DocumentsPage = () => {
       <h2 className="text-lg font-medium">
         Welcome to {userName}&apos;s Notion
       </h2>
-      <Button>
+      <Button onClick={onCreate}>
         <PlusCircle className="h-4 w-4 mr-2" />
         Create a note
       </Button>

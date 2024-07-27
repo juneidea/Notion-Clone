@@ -1,11 +1,20 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ChevronsLeft, MenuIcon } from "lucide-react";
+import {
+  ChevronsLeft,
+  MenuIcon,
+  PlusCircle,
+  Search,
+  Settings,
+} from "lucide-react";
 import React, { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { usePathname } from "next/navigation";
 import { UserItem } from "./user-item";
+import { Item } from "./item";
+import { useDocumentsQuery } from "@/hooks/use-documents-query";
+import { useDocumentsMutate } from "@/hooks/use-documents-mutate";
 
 export const Navigation = () => {
   const pathname = usePathname();
@@ -23,13 +32,10 @@ export const Navigation = () => {
     } else {
       resetWidth();
     }
-  }, [isMobile]);
-
-  useEffect(() => {
-    if (isMobile) {
-      collapse();
-    }
   }, [pathname, isMobile]);
+
+  const documents = useDocumentsQuery().data;
+  const { onCreate } = useDocumentsMutate();
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -110,9 +116,14 @@ export const Navigation = () => {
         </div>
         <div>
           <UserItem />
+          <Item onClick={() => {}} label="Search" icon={Search} isSearch />
+          <Item onClick={() => {}} label="Search" icon={Settings} />
+          <Item onClick={onCreate} label="New page" icon={PlusCircle} />
         </div>
         <div className="mt-4">
-          <p>Documents</p>
+          {documents?.map((document) => (
+            <p key={document.id}>{document.title}</p>
+          ))}
         </div>
         <div
           onMouseDown={handleMouseDown}
