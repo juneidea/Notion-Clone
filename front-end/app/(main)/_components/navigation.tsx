@@ -4,17 +4,25 @@ import { cn } from "@/lib/utils";
 import {
   ChevronsLeft,
   MenuIcon,
+  Plus,
   PlusCircle,
   Search,
   Settings,
+  Trash,
 } from "lucide-react";
 import React, { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { usePathname } from "next/navigation";
 import { UserItem } from "./user-item";
 import { Item } from "./item";
-import { useDocumentsQuery } from "@/hooks/use-documents-query";
+import { TrashBox } from "./trash-box";
+import { DocumentList } from "./document-list";
 import { useDocumentsMutate } from "@/hooks/use-documents-mutate";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 
 export const Navigation = () => {
   const pathname = usePathname();
@@ -34,7 +42,6 @@ export const Navigation = () => {
     }
   }, [pathname, isMobile]);
 
-  const documents = useDocumentsQuery().data;
   const { onCreate } = useDocumentsMutate();
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -118,12 +125,30 @@ export const Navigation = () => {
           <UserItem />
           <Item onClick={() => {}} label="Search" icon={Search} isSearch />
           <Item onClick={() => {}} label="Search" icon={Settings} />
-          <Item onClick={onCreate} label="New page" icon={PlusCircle} />
+          <Item
+            onClick={() => onCreate({ title: "Untitled" })}
+            label="New page"
+            icon={PlusCircle}
+          />
         </div>
         <div className="mt-4">
-          {documents?.map((document) => (
-            <p key={document.id}>{document.title}</p>
-          ))}
+          <DocumentList />
+          <Item
+            onClick={() => onCreate({ title: "Untitled" })}
+            icon={Plus}
+            label="Add a page"
+          />
+          <Popover>
+            <PopoverTrigger className="w-full mt-4">
+              <Item label="Trash" icon={Trash} />
+            </PopoverTrigger>
+            <PopoverContent
+              className="p-0 w-72"
+              side={isMobile ? "bottom" : "right"}
+            >
+              <TrashBox />
+            </PopoverContent>
+          </Popover>
         </div>
         <div
           onMouseDown={handleMouseDown}

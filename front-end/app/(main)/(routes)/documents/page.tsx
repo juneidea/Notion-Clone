@@ -27,7 +27,7 @@ const DocumentsPage = () => {
       <h2 className="text-lg font-medium">
         Welcome to {userName}&apos;s Notion
       </h2>
-      <Button onClick={onCreate}>
+      <Button onClick={() => onCreate({ title: "Untitled" })}>
         <PlusCircle className="h-4 w-4 mr-2" />
         Create a note
       </Button>
