@@ -7,10 +7,10 @@ import { useTrashQuery } from "@/hooks/use-trash-query";
 import { Spinner } from "@/components/spinner";
 import { Search, Trash, Undo } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { ConfirmModal } from "@/components/modals/confirm-modal";
 
 export const TrashBox = () => {
   const router = useRouter();
-  const params = useParams();
   const documents = useTrashQuery(-1);
   const { remove, restore } = useTrashMutate();
 
@@ -32,12 +32,9 @@ export const TrashBox = () => {
     restore(documentId);
   };
 
-  const onRemove = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    documentId: number
-  ) => {
-    event.stopPropagation();
-    remove(documentId);
+  const onRemove = (documentId: number) => {
+    router.push("/documents");
+    setTimeout(() => remove(documentId), 300);
   };
 
   if (!documents) {
@@ -70,24 +67,23 @@ export const TrashBox = () => {
             onClick={() => onClick(document.id)}
             className="text-sm rounded-sm w-full hover:bg-primary/5 flex items-center text-primary justify-between"
           >
-            <span className="truncate pl-2">
-              {document.title + " - " + document.id}
-            </span>
+            <span className="truncate pl-2">{document.title}</span>
             <div className="flex items-center">
               <div
                 onClick={(e) => onRestore(e, document.id)}
                 role="button"
-                className="rounded-sm p-2 hover:bg-neutral-200"
+                className="rounded-sm p-2 hover:bg-neutral-200 dark:hover:bg-neutral-600"
               >
                 <Undo className="h-4 w-4 text-muted-foreground" />
               </div>
-              <div
-                onClick={(e) => onRemove(e, document.id)}
-                role="button"
-                className="rounded-sm p-2 hover:bg-neutral-200"
-              >
-                <Trash className="h-4 w-4 text-muted-foreground" />
-              </div>
+              <ConfirmModal onConfirm={() => onRemove(document.id)}>
+                <div
+                  role="button"
+                  className="rounded-sm p-2 hover:bg-neutral-200 dark:hover:bg-neutral-600"
+                >
+                  <Trash className="h-4 w-4 text-muted-foreground" />
+                </div>
+              </ConfirmModal>
             </div>
           </div>
         ))}

@@ -1,10 +1,12 @@
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import api from "@/app/api";
 import { Document } from "@/lib/types";
 
 export const useDocumentsMutate = () => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   // New Document
 
@@ -20,6 +22,7 @@ export const useDocumentsMutate = () => {
       queryClient.invalidateQueries({
         queryKey: ["documents", variables.parentId],
       });
+      router.push(`/documents/${data.data.id}`);
       toast.success("New note created!");
     },
   });
@@ -44,22 +47,36 @@ export const useDocumentsMutate = () => {
       id,
       title,
       is_archived,
+      content,
+      cover_image,
+      icon,
+      is_published,
     }: {
       id: number;
-      title: string;
-      is_archived: boolean;
+      title?: string;
+      is_archived?: boolean;
+      content?: string;
+      cover_image?: string;
+      icon?: string;
+      is_published?: boolean;
     }) =>
       api.put(`/api/documents/update/${id}/`, {
         title,
         is_archived,
+        content,
+        cover_image,
+        icon,
+        is_published,
       }),
     onSuccess: (data, variables) => {
       const parentId =
         data.data.parent_id === -1 ? undefined : data.data.parent_id;
       queryClient.invalidateQueries({
-        queryKey: ["documents", parentId],
+        queryKey: ["documents"],
       });
-      toast.success("Note moved to trash!");
+      if (variables.is_archived === true) {
+        toast.success("Note moved to trash!");
+      }
     },
   });
 
@@ -96,5 +113,39 @@ export const useDocumentsMutate = () => {
     });
   };
 
-  return { onCreate, archive };
+  const update = async ({
+    id,
+    title,
+    content,
+    cover_image,
+    icon,
+    is_published,
+  }: {
+    id: number;
+    title?: string;
+    content?: string;
+    cover_image?: string;
+    icon?: string;
+    is_published?: boolean;
+  }) => {
+    const byIdDocumentQuery: Document[] = await api
+      .get(`/api/documents/?documentId=${id}`)
+      .then((res) => res.data);
+    if (!byIdDocumentQuery) {
+      throw new Error("Not found");
+    }
+    const updatedDocument = updateDocumentMutation.mutate({
+      id,
+      title,
+      content,
+      cover_image,
+      icon,
+      is_published,
+    });
+    if (updateDocumentMutation.isPending) toast.loading("Updating note...");
+    if (updateDocumentMutation.isError) toast.error("Failed to update");
+    return updatedDocument;
+  };
+
+  return { archive, onCreate, update };
 };

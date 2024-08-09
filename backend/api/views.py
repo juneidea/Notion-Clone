@@ -23,13 +23,21 @@ class DocumentListCreate(generics.ListCreateAPIView):
             return Document.objects.filter(author=user, id=documentId)
         if isArchived:
             return Document.objects.filter(author=user, is_archived=isArchived)
-        return Document.objects.filter(author=user)
     
     def perform_create(self, serializer):
         if serializer.is_valid():
             serializer.save(author=self.request.user)
         else:
             print(serializer.errors)
+
+class PreviewList(generics.ListAPIView):
+    serializer_class = DocumentSerializer
+    permission_classes = []
+
+    def get_queryset(self):
+        documentId = self.request.query_params.get('documentId')
+        isPublished = self.request.query_params.get('isPublished')
+        return Document.objects.filter(is_published=isPublished, id=documentId)
 
 class DocumentDelete(generics.DestroyAPIView):
     serializer_class = DocumentSerializer

@@ -1,10 +1,12 @@
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/app/api";
 import { Document } from "@/lib/types";
 
 export const useTrashMutate = () => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   // Delete Document
 
@@ -14,6 +16,7 @@ export const useTrashMutate = () => {
       queryClient.invalidateQueries({
         queryKey: ["documents"],
       });
+      router.push("/documents");
       toast.success("Note deleted!");
     },
   });
