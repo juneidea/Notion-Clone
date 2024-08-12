@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { useDjangoAuth } from "@/hooks/use-django-auth";
@@ -10,14 +11,24 @@ import { Spinner } from "@/components/spinner";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Logo } from "./logo";
 import { LoginModal } from "./loginModal";
-import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/app/store";
 
 export const Navbar = () => {
   const router = useRouter();
   const scrolled = useScrollTop();
-  const { isAuthenticated, isLoading, auth } = useDjangoAuth();
+  const params = useSearchParams();
+  const { auth, oauth } = useDjangoAuth();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isLoading = useAuthStore((state) => state.isLoading);
 
   const modalRef = useRef<HTMLDialogElement | null>(null);
+
+  useEffect(() => {
+    const code = params.get("code");
+    if (code) {
+      oauth(code);
+    }
+  }, []);
 
   const handleAuth = async (
     e: React.FormEvent<HTMLFormElement>,
@@ -26,6 +37,12 @@ export const Navbar = () => {
     e.preventDefault();
     await auth(e, modal);
     window.location.reload();
+  };
+
+  const handleSignInGithub = () => {
+    window.location.assign(
+      `https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}`
+    );
   };
 
   return (
@@ -49,7 +66,9 @@ export const Navbar = () => {
             >
               Log in
             </Button>
-            <Button size="sm">Get Notion Free</Button>
+            <Button size="sm" onClick={handleSignInGithub}>
+              Get Notion Free
+            </Button>
           </>
         )}
         {isAuthenticated && (

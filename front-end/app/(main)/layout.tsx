@@ -4,12 +4,13 @@ import { useState } from "react";
 import { redirect } from "next/navigation";
 import { Spinner } from "@/components/spinner";
 import { SearchCommand } from "@/components/search-command";
-import { useDjangoAuth } from "@/hooks/use-django-auth";
 import { Navigation } from "./_components/navigation";
 import { SettingsModal } from "@/components/modals/settings-modal";
+import { useAuthStore } from "../store";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated, isLoading } = useDjangoAuth();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isLoading = useAuthStore((state) => state.isLoading);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 

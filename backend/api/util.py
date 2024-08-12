@@ -1,0 +1,29 @@
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+
+SOCIAL_AUTH_PASSWORD = 'SocialPass1'
+
+def login_user(username, password):
+      user = authenticate(username=username, password=password)
+      print(username, password, 'LOGIN USER', user)
+      user_tokens = user.tokens()
+      return {
+        'access_token': str(user_tokens.get('access')),
+        'refresh_token': str(user_tokens.get('refresh'))
+      }
+
+def register_social_user(email, username):
+    user = User.objects.filter(email=email)
+    if user.exists():
+      result = login_user(username=username, password=SOCIAL_AUTH_PASSWORD)
+      return result
+    else:
+      new_user={
+        'email': email,
+        'username': username,
+        'password': SOCIAL_AUTH_PASSWORD
+      }
+      register_user = User.objects.create_user(**new_user)
+      register_user.save()
+      result = login_user(username=username, password=SOCIAL_AUTH_PASSWORD)
+      return result

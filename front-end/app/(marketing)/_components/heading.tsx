@@ -1,13 +1,20 @@
 "use client";
 
+import { useAuthStore } from "@/app/store";
 import { Spinner } from "@/components/spinner";
 import { Button } from "@/components/ui/button";
-import { useDjangoAuth } from "@/hooks/use-django-auth";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export const Heading = () => {
-  const { isAuthenticated, isLoading } = useDjangoAuth();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isLoading = useAuthStore((state) => state.isLoading);
+
+  const handleSignInGithub = () => {
+    window.location.assign(
+      `https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}`
+    );
+  };
 
   return (
     <div className="max-w-3xl space-y-4">
@@ -30,7 +37,7 @@ export const Heading = () => {
           </Link>
         </Button>
       ) : (
-        <Button>
+        <Button onClick={handleSignInGithub}>
           Get Notion Free <ArrowRight className="h-4 w-4 ml-2" />
         </Button>
       )}

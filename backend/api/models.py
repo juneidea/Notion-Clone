@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class Document(models.Model):
     title = models.CharField(max_length=100, blank=True)
@@ -14,3 +15,11 @@ class Document(models.Model):
     def __str__(self):
         return self.title
 
+def tokens(self):
+    refresh = RefreshToken.for_user(self)
+    return {
+        "refresh": str(refresh),
+        "access": str(refresh.access_token)
+    }
+
+User.add_to_class('tokens', tokens)
