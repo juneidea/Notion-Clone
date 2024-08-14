@@ -14,6 +14,5 @@ export const useSearchQuery = (documentId?: string) => {
         .then((res) => res.data),
     queryKey: documentId ? ["documents", documentId] : ["search"],
   });
-
   return { documents };
 };

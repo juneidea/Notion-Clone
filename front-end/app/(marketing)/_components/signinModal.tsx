@@ -1,17 +1,12 @@
 "use client";
 
 import React, { forwardRef } from "react";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
-interface forwardProps {
-  handleAuth: (
-    e: React.FormEvent<HTMLFormElement>,
-    modal: HTMLDialogElement | null
-  ) => void;
-}
+interface forwardProps {}
 
-export const LoginModal = forwardRef(function LoginModal(
+export const SigninModal = forwardRef(function SigninModal(
   props: forwardProps,
   ref: any
 ) {
@@ -32,38 +27,28 @@ export const LoginModal = forwardRef(function LoginModal(
     }
   };
 
+  const handleSignInGithub = () => {
+    window.location.assign(
+      `https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}`
+    );
+  };
+
   return (
     <dialog
       ref={ref}
       className="rounded-xl p-6"
       onClick={(e) => handleModalClick(e, ref.current)}
     >
-      <form
-        className="flex flex-col p-6 gap-4"
-        onSubmit={(e) => props.handleAuth(e, ref.current)}
-      >
+      <div className="flex flex-col p-6 gap-4">
         <div>
           <h1 className="text-xl font-bold">Sign in</h1>
-          <p className="text-sm font-light">to continue to notion</p>
+          <p className="text-sm font-light">with Github</p>
         </div>
-        <label htmlFor="username">Username</label>
-        <input
-          type="text"
-          name="username"
-          id="username"
-          className={cn("bg-stone-200 dark:bg-stone-700")}
-          autoComplete="username"
-        />
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          className={cn("bg-stone-200 dark:bg-stone-700")}
-          autoComplete="current-password webauthn"
-        />
-        <Button type="submit">Log in</Button>
-      </form>
+        <Image src="/github.svg" height="150" width="150" alt="Github" />
+        <Button type="button" onClick={handleSignInGithub}>
+          Log in
+        </Button>
+      </div>
     </dialog>
   );
 });

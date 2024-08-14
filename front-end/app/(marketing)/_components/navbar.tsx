@@ -9,19 +9,24 @@ import { useScrollTop } from "@/hooks/use-scroll-top";
 import { cn } from "@/lib/utils";
 import { Spinner } from "@/components/spinner";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { useAuthStore } from "@/app/store";
 import { Logo } from "./logo";
 import { LoginModal } from "./loginModal";
-import { useAuthStore } from "@/app/store";
+import { SigninModal } from "./signinModal";
+
+const defaultAvatar =
+  "https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png";
 
 export const Navbar = () => {
   const router = useRouter();
   const scrolled = useScrollTop();
   const params = useSearchParams();
-  const { auth, oauth } = useDjangoAuth();
+  const { user, auth, oauth } = useDjangoAuth();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isLoading = useAuthStore((state) => state.isLoading);
 
   const modalRef = useRef<HTMLDialogElement | null>(null);
+  const signinRef = useRef<HTMLDialogElement | null>(null);
 
   useEffect(() => {
     const code = params.get("code");
@@ -37,12 +42,6 @@ export const Navbar = () => {
     e.preventDefault();
     await auth(e, modal);
     window.location.reload();
-  };
-
-  const handleSignInGithub = () => {
-    window.location.assign(
-      `https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID}`
-    );
   };
 
   return (
@@ -66,7 +65,12 @@ export const Navbar = () => {
             >
               Log in
             </Button>
-            <Button size="sm" onClick={handleSignInGithub}>
+            <Button
+              size="sm"
+              onClick={() => {
+                signinRef.current?.showModal();
+              }}
+            >
               Get Notion Free
             </Button>
           </>
@@ -83,13 +87,14 @@ export const Navbar = () => {
               Enter Notion
             </Button>
             <Avatar className="h-8 w-8">
-              <AvatarImage src="https://github.com/juneidea.png" />
+              <AvatarImage src={user.avatar || defaultAvatar} />
             </Avatar>
           </div>
         )}
         <ModeToggle />
       </div>
       <LoginModal ref={modalRef} handleAuth={handleAuth} />
+      <SigninModal ref={signinRef} />
     </div>
   );
 };

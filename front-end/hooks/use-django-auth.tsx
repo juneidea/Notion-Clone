@@ -12,7 +12,7 @@ export const useDjangoAuth = () => {
   const loadingTrue = useAuthStore((state) => state.loadingTrue);
   const loadingFalse = useAuthStore((state) => state.loadingFalse);
 
-  const defaultUser = { id: -1, username: "" };
+  const defaultUser = { id: -1, username: "", avatar: "", email: "" };
   const [user, setUser] = useState(defaultUser);
 
   useEffect(() => {
@@ -122,7 +122,13 @@ export const useDjangoAuth = () => {
   const getCurrentUser = async () => {
     try {
       const res = await api.get("/api/user/");
-      setUser(res.data);
+      const { avatar, user } = res.data;
+      setUser({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        avatar,
+      });
     } catch (error) {
       console.log(error);
     }
