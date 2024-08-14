@@ -79,7 +79,6 @@ export const Navbar = () => {
         {isAuthenticated && (
           <div className="flex">
             <Button
-              variant="ghost"
               size="sm"
               onClick={() => {
                 router.push("/documents");
@@ -87,7 +86,7 @@ export const Navbar = () => {
             >
               Enter Notion
             </Button>
-            <Avatar className="h-8 w-8">
+            <Avatar className="h-8 w-8 ml-2">
               <AvatarImage src={user.avatar || defaultAvatar} />
             </Avatar>
           </div>

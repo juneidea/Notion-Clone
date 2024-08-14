@@ -41,10 +41,16 @@ export const SigninModal = forwardRef(function SigninModal(
     >
       <div className="flex flex-col p-6 gap-4">
         <div>
-          <h1 className="text-xl font-bold">Sign in</h1>
-          <p className="text-sm font-light">with Github</p>
+          <h1 className="text-xl font-bold text-center">Free Sign in</h1>
+          <p className="text-sm font-light text-center">with Github</p>
         </div>
-        <Image src="/github.svg" height="150" width="150" alt="Github" />
+        <Image
+          className="rounded-full border-white border-2 bg-white"
+          src="/github.svg"
+          height="150"
+          width="150"
+          alt="Github"
+        />
         <Button type="button" onClick={handleSignInGithub}>
           Log in
         </Button>
