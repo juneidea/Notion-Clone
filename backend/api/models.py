@@ -14,6 +14,14 @@ class Document(models.Model):
 
     def __str__(self):
         return self.title
+    
+class Account(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return self.user.username
+
 
 def tokens(self):
     refresh = RefreshToken.for_user(self)

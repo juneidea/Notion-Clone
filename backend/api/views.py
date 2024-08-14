@@ -3,8 +3,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .serializers import UserSerializer, DocumentSerializer, GithubOauthSerializer
-from .models import Document
+from .serializers import UserSerializer, AccountSerializer, DocumentSerializer, GithubOauthSerializer
+from .models import Document, Account
 
 class DocumentListCreate(generics.ListCreateAPIView):
     serializer_class = DocumentSerializer
@@ -24,6 +24,7 @@ class DocumentListCreate(generics.ListCreateAPIView):
             return Document.objects.filter(author=user, id=documentId)
         if isArchived:
             return Document.objects.filter(author=user, is_archived=isArchived)
+        return Document.objects.filter(author=user)
     
     def perform_create(self, serializer):
         if serializer.is_valid():
@@ -57,18 +58,18 @@ class DocumentUpdate(generics.UpdateAPIView):
         return Document.objects.filter(author=user)
 
 class CreateUserView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    queryset = Account.objects.all()
+    serializer_class = AccountSerializer
     permission_classes = [AllowAny]
 
 class GetUserView(generics.RetrieveAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    queryset = Account.objects.all()
+    serializer_class = AccountSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
         qs = self.get_queryset()
-        obj = get_object_or_404(qs, id=self.request.user.id)
+        obj = get_object_or_404(qs, user_id=self.request.user.id)
         return obj
 
 class GithubSignInView(generics.GenericAPIView):

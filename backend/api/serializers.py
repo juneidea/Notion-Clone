@@ -1,19 +1,36 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from .models import Document
+from .models import Document, Account
 from .github import Github
 from .util import register_social_user
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "username", "password"]
+        fields = ["id", "username", "email", "password"]
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+    
+class AccountSerializer(serializers.ModelSerializer):
+    user = UserSerializer(many=False)
+    class Meta:
+        model = Account
+        fields = "__all__"
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+        user_instance = User.objects.create(
+        username=user_data['username'],email=user_data['email'], password=user_data['password'])
+        user_instance.save()
+        
+        account_instance = Account.objects.create(
+            **validated_data, user=user_instance)
+        account_instance.save()
+        return account_instance
     
 class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -31,7 +48,8 @@ class GithubOauthSerializer(serializers.Serializer):
             if user.get("login"):
                 email = user.get("email")
                 username = user.get("login")
-                return register_social_user(email, username)
+                avatar = user.get("avatar_url")
+                return register_social_user(email, username, avatar)
 
         else:
             raise ValidationError("token is invalid or has expired")
