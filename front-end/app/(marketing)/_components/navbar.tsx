@@ -21,7 +21,8 @@ export const Navbar = () => {
   const router = useRouter();
   const scrolled = useScrollTop();
   const params = useSearchParams();
-  const { user, auth, oauth } = useDjangoAuth();
+  const { user } = useAuthStore();
+  const { auth, oauth } = useDjangoAuth();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isLoading = useAuthStore((state) => state.isLoading);
 

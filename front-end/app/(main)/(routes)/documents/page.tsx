@@ -3,11 +3,11 @@
 import Image from "next/image";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useDjangoAuth } from "@/hooks/use-django-auth";
 import { useDocumentsMutate } from "@/hooks/use-documents-mutate";
+import { useAuthStore } from "@/app/store";
 
 const DocumentsPage = () => {
-  const { user } = useDjangoAuth();
+  const { user } = useAuthStore();
   const userName = user
     ? user.username.charAt(0).toUpperCase() + user.username.slice(1)
     : "Anonymous";

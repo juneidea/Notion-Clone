@@ -3,7 +3,6 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { File } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useDjangoAuth } from "@/hooks/use-django-auth";
 import { useSearchQuery } from "@/hooks/use-search-query";
 import {
   CommandDialog,
@@ -13,6 +12,7 @@ import {
   CommandItem,
   CommandList,
 } from "./ui/command";
+import { useAuthStore } from "@/app/store";
 
 export const SearchCommand = ({
   isOpen,
@@ -21,7 +21,7 @@ export const SearchCommand = ({
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const { user } = useDjangoAuth();
+  const { user } = useAuthStore();
   const router = useRouter();
   const { documents } = useSearchQuery();
   const [isMounted, setIsMounted] = useState(false);

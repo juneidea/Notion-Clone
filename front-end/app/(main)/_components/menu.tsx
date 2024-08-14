@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useDjangoAuth } from "@/hooks/use-django-auth";
 import { useDocumentsMutate } from "@/hooks/use-documents-mutate";
 import {
   DropdownMenu,
@@ -13,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Trash } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuthStore } from "@/app/store";
 
 interface MenuProps {
   documentId: number;
@@ -20,7 +20,7 @@ interface MenuProps {
 
 export const Menu = ({ documentId }: MenuProps) => {
   const router = useRouter();
-  const { user } = useDjangoAuth();
+  const { user } = useAuthStore();
 
   const { archive } = useDocumentsMutate();
 

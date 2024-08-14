@@ -11,9 +11,9 @@ export const useDjangoAuth = () => {
   const authenticatedFalse = useAuthStore((state) => state.authenticatedFalse);
   const loadingTrue = useAuthStore((state) => state.loadingTrue);
   const loadingFalse = useAuthStore((state) => state.loadingFalse);
+  const setUser = useAuthStore((state) => state.setUser);
 
   const defaultUser = { id: -1, username: "", avatar: "", email: "" };
-  const [user, setUser] = useState(defaultUser);
 
   useEffect(() => {
     checkToken();
@@ -140,5 +140,5 @@ export const useDjangoAuth = () => {
     localStorage.removeItem("access");
   };
 
-  return { user, auth, oauth, checkToken, logout };
+  return { auth, oauth, checkToken, logout };
 };

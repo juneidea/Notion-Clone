@@ -20,7 +20,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { useDjangoAuth } from "@/hooks/use-django-auth";
+import { useAuthStore } from "@/app/store";
 
 interface ItemProp {
   id?: number;
@@ -77,7 +77,7 @@ export const Item = ({
   };
 
   const ChevronIcon = expanded ? ChevronDown : ChevronRight;
-  const { user } = useDjangoAuth();
+  const { user } = useAuthStore();
 
   return (
     <div

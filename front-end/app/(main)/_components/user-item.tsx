@@ -12,12 +12,14 @@ import {
 import { ChevronsLeftRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/app/store";
 
 const defaultAvatar =
   "https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png";
 
 export const UserItem = () => {
-  const { user, logout } = useDjangoAuth();
+  const { user } = useAuthStore();
+  const { logout } = useDjangoAuth();
   const router = useRouter();
   return (
     <DropdownMenu>
