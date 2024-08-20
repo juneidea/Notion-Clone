@@ -23,4 +23,4 @@ class Github:
           return user_data
 
         except Exception as e:
-            raise AuthenticationFailed(detail="token is invalid or has expired")
+            raise AuthenticationFailed(detail="access token is invalid or has expired")

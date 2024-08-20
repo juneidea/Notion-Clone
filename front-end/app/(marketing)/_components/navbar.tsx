@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
@@ -29,11 +29,13 @@ export const Navbar = () => {
   const modalRef = useRef<HTMLDialogElement | null>(null);
   const signinRef = useRef<HTMLDialogElement | null>(null);
 
+  let isMounted = false;
   useEffect(() => {
     const code = params.get("code");
-    if (code) {
+    if (code && isMounted) {
       oauth(code);
     }
+    isMounted = true;
   }, []);
 
   const handleAuth = async (
