@@ -74,7 +74,7 @@ class GetUserView(generics.RetrieveAPIView):
 
 class GithubSignInView(generics.GenericAPIView):
     serializer_class=GithubOauthSerializer
-    permission_classes = []
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = self.serializer_class(data = request.data)

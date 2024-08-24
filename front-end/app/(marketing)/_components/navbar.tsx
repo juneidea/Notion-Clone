@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
@@ -44,7 +44,7 @@ export const Navbar = () => {
   ) => {
     e.preventDefault();
     await auth(e, modal);
-    window.location.reload();
+    router.push("/");
   };
 
   return (
@@ -53,6 +53,7 @@ export const Navbar = () => {
         "z-50 bg-background dark:bg-[#1F1F1F] fixed top-0 flex items-center w-full p-6",
         scrolled && "border-b shadow-sm"
       )}
+      data-testid="navbar"
     >
       <Logo />
       <div className="md:ml-auto md:justify-end justify-between w-full flex items-center gap-x-2">
