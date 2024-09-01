@@ -30,13 +30,14 @@ export const Navbar = ({ isCollapsed, onResetWidth }: NavbarProps) => {
   }
 
   return (
-    <>
+    <div data-testid="navbar">
       <nav className="bg-background dark:bg-[#1F1F1F] px-3 py-2 w-full flex items-center gap-x-4">
         {isCollapsed && (
           <MenuIcon
             role="button"
             onClick={onResetWidth}
             className="h-6 w-6 text-muted-foreground"
+            data-testid="menu icon"
           />
         )}
         <div className="flex items-center justify-between w-full">
@@ -50,6 +51,6 @@ export const Navbar = ({ isCollapsed, onResetWidth }: NavbarProps) => {
       {byIdDocument[0].is_archived && (
         <Banner documentId={byIdDocument[0].id} />
       )}
-    </>
+    </div>
   );
 };

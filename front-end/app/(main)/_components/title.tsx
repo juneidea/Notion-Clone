@@ -46,8 +46,8 @@ export const Title = ({ initialData }: TitleProps) => {
   };
 
   return (
-    <div className="flex items-center gap-x-1">
-      {!!initialData.icon && <p>{initialData.icon}</p>}
+    <div className="flex items-center gap-x-1" data-testid="title">
+      {!!initialData.icon && <p data-testid="icon">{initialData.icon}</p>}
       {isEditing ? (
         <Input
           ref={inputRef}
@@ -57,6 +57,7 @@ export const Title = ({ initialData }: TitleProps) => {
           onKeyDown={onKeyDown}
           value={title}
           className="h-7 px-2 focus-visible:ring-transparent"
+          data-testid="input"
         />
       ) : (
         <Button
@@ -64,6 +65,7 @@ export const Title = ({ initialData }: TitleProps) => {
           variant="ghost"
           size="sm"
           className="font-normal h-auto p-1"
+          data-testid="button"
         >
           <span className="truncate">{initialData.title}</span>
         </Button>
@@ -73,5 +75,7 @@ export const Title = ({ initialData }: TitleProps) => {
 };
 
 Title.Skeleton = function TitleSkeleton() {
-  return <Skeleton className="h-9 w-20 rounded-md" />;
+  return (
+    <Skeleton className="h-9 w-20 rounded-md" data-testid="title skeleton" />
+  );
 };

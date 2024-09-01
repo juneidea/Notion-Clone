@@ -1,16 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { Check, Copy, Globe, GlobeIcon } from "lucide-react";
 import { Document } from "@/lib/types";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
 import { useOrigin } from "@/hooks/use-origin";
 import { useDocumentsMutate } from "@/hooks/use-documents-mutate";
-import { Button } from "@/components/ui/button";
-import { Check, Copy, Globe, GlobeIcon } from "lucide-react";
 
 interface PublishProbs {
   initialData: Document;
@@ -48,7 +48,7 @@ export const Publish = ({ initialData }: PublishProbs) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button size="sm" variant="ghost">
+        <Button size="sm" variant="ghost" data-testid="publish trigger">
           Publish
           {initialData.is_published && (
             <GlobeIcon className="text-sky-500 w-4 h-4 ml-2" />
@@ -74,6 +74,7 @@ export const Publish = ({ initialData }: PublishProbs) => {
                 onClick={onCopy}
                 disabled={copied}
                 className="h-8 rounded-l-none"
+                data-testid="copy"
               >
                 {copied ? (
                   <Check className="h-4 w-4 " />
@@ -103,6 +104,7 @@ export const Publish = ({ initialData }: PublishProbs) => {
               onClick={onPublish}
               className="w-full text-xs"
               size="sm"
+              data-testid="confirm publish"
             >
               Publish
             </Button>

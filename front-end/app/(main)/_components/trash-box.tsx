@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { Search, Trash, Undo } from "lucide-react";
 import { useTrashMutate } from "@/hooks/use-trash-mutate";
 import { useTrashQuery } from "@/hooks/use-trash-query";
-import { Spinner } from "@/components/spinner";
-import { Search, Trash, Undo } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/spinner";
 import { ConfirmModal } from "@/components/modals/confirm-modal";
 
 export const TrashBox = () => {
@@ -34,10 +34,11 @@ export const TrashBox = () => {
 
   const onRemove = (documentId: number) => {
     router.push("/documents");
+    // wait for router.push
     setTimeout(() => remove(documentId), 300);
   };
 
-  if (!documents) {
+  if (!documents.data) {
     return (
       <div className="h-full flex items-center justify-center p-4">
         <Spinner size="lg" />
@@ -46,14 +47,15 @@ export const TrashBox = () => {
   }
 
   return (
-    <div className="text-sm">
+    <div className="text-sm" data-testid="trash box">
       <div className="flex items-center gap-x-1 p-2">
-        <Search className="h-4 w-4" />
+        <Search className="h-4 w-4" data-testid="search icon" />
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="h-7 px-2 focus-visible:ring-transparent bg-secondary"
           placeholder="Filter by page title..."
+          data-testid="search input"
         />
       </div>
       <div className="mt-2 px-1 pb-1">
@@ -66,13 +68,17 @@ export const TrashBox = () => {
             role="button"
             onClick={() => onClick(document.id)}
             className="text-sm rounded-sm w-full hover:bg-primary/5 flex items-center text-primary justify-between"
+            data-testid="document"
           >
-            <span className="truncate pl-2">{document.title}</span>
+            <span className="truncate pl-2" data-testid="document title">
+              {document.title}
+            </span>
             <div className="flex items-center">
               <div
                 onClick={(e) => onRestore(e, document.id)}
                 role="button"
                 className="rounded-sm p-2 hover:bg-neutral-200 dark:hover:bg-neutral-600"
+                data-testid="undo"
               >
                 <Undo className="h-4 w-4 text-muted-foreground" />
               </div>
@@ -81,7 +87,10 @@ export const TrashBox = () => {
                   role="button"
                   className="rounded-sm p-2 hover:bg-neutral-200 dark:hover:bg-neutral-600"
                 >
-                  <Trash className="h-4 w-4 text-muted-foreground" />
+                  <Trash
+                    className="h-4 w-4 text-muted-foreground"
+                    data-testid="trash icon"
+                  />
                 </div>
               </ConfirmModal>
             </div>

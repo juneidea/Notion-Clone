@@ -29,7 +29,11 @@ export const SettingsModal = ({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={() => setIsOpen(false)}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={() => setIsOpen(false)}
+      data-testid="settings modal"
+    >
       <DialogContent>
         <DialogTitle className="hidden"></DialogTitle>
         <DialogDescription className="hidden"></DialogDescription>

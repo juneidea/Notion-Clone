@@ -18,19 +18,19 @@ import React, {
   useState,
   SetStateAction,
 } from "react";
-import { useMediaQuery } from "usehooks-ts";
 import { useParams, usePathname } from "next/navigation";
-import { UserItem } from "./user-item";
-import { Item } from "./item";
-import { TrashBox } from "./trash-box";
-import { DocumentList } from "./document-list";
+import { useMediaQuery } from "usehooks-ts";
 import { useDocumentsMutate } from "@/hooks/use-documents-mutate";
+import { DocumentList } from "./document-list";
+import { Item } from "./item";
+import { Navbar } from "./navbar";
+import { TrashBox } from "./trash-box";
+import { UserItem } from "./user-item";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-import { Navbar } from "./navbar";
 
 export const Navigation = ({
   setIsSearchOpen,
@@ -125,6 +125,7 @@ export const Navigation = ({
           isResetting && "transition-all ease-in-out duration-300",
           isMobile && "w-0"
         )}
+        data-testid="aside"
       >
         <div
           role="button"
@@ -134,7 +135,7 @@ export const Navigation = ({
           )}
           onClick={collapse}
         >
-          <ChevronsLeft className="h-6 w-6" />
+          <ChevronsLeft className="h-6 w-6" data-testid="chevrons left" />
         </div>
         <div>
           <UserItem />
@@ -163,7 +164,10 @@ export const Navigation = ({
             label="Add a page"
           />
           <Popover>
-            <PopoverTrigger className="w-full mt-4">
+            <PopoverTrigger
+              className="w-full mt-4"
+              data-testid="trash box trigger"
+            >
               <Item label="Trash" icon={Trash} />
             </PopoverTrigger>
             <PopoverContent
@@ -178,6 +182,7 @@ export const Navigation = ({
           onMouseDown={handleMouseDown}
           onClick={resetWidth}
           className="opacity-0 group-hover/sidebar:opacity-100 transition cursor-ew-resize absolute h-full w-1 bg-primary/10 right-0 top-0"
+          data-testid="width line"
         />
       </aside>
       <div
@@ -187,11 +192,15 @@ export const Navigation = ({
           isResetting && "transition-all ease-in-out duration-300",
           isMobile && "left-0 w-full"
         )}
+        data-testid="navbar wrapper"
       >
         {!!params.documentId ? (
           <Navbar isCollapsed={isCollapsed} onResetWidth={resetWidth} />
         ) : (
-          <nav className="bg-transparent px-3 py-2 w-full">
+          <nav
+            className="bg-transparent px-3 py-2 w-full"
+            data-testid="empty nav"
+          >
             {isCollapsed && (
               <MenuIcon
                 role="button"

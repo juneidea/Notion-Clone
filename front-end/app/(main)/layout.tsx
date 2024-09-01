@@ -4,8 +4,8 @@ import { useState } from "react";
 import { redirect } from "next/navigation";
 import { Spinner } from "@/components/spinner";
 import { SearchCommand } from "@/components/search-command";
-import { Navigation } from "./_components/navigation";
 import { SettingsModal } from "@/components/modals/settings-modal";
+import { Navigation } from "./_components/navigation";
 import { useAuthStore } from "../store";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {

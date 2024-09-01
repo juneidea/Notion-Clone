@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Document } from "@/lib/types";
 import { useDocumentsQuery } from "@/hooks/use-documents-query";
 import { Item } from "./item";
 import { cn } from "@/lib/utils";
@@ -11,13 +10,11 @@ import { FileIcon } from "lucide-react";
 interface DocumentListProps {
   parentDocumentId?: number;
   level?: number;
-  data?: Document[];
 }
 
 export const DocumentList = ({
   parentDocumentId,
   level = 0,
-  data,
 }: DocumentListProps) => {
   const params = useParams();
   const router = useRouter();
@@ -51,7 +48,7 @@ export const DocumentList = ({
   }
 
   return (
-    <>
+    <div data-testid="document list">
       <p
         style={{ paddingLeft: level ? `${level * 12 + 25}px` : undefined }}
         className={cn(
@@ -80,6 +77,6 @@ export const DocumentList = ({
           )}
         </div>
       ))}
-    </>
+    </div>
   );
 };

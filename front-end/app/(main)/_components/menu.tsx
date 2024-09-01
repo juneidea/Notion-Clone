@@ -32,7 +32,7 @@ export const Menu = ({ documentId }: MenuProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="sm" variant="ghost">
+        <Button size="sm" variant="ghost" data-testid="menu trigger">
           <MoreHorizontal className="h-4 w-4"></MoreHorizontal>
         </Button>
       </DropdownMenuTrigger>
@@ -56,5 +56,5 @@ export const Menu = ({ documentId }: MenuProps) => {
 };
 
 Menu.Skeleton = function MenuSkeleton() {
-  return <Skeleton className="h-10 w-10" />;
+  return <Skeleton className="h-10 w-10" data-testid="menu skeleton" />;
 };

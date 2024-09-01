@@ -1,7 +1,7 @@
 "use client";
 
+import { ChevronsLeftRight } from "lucide-react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { useDjangoAuth } from "@/hooks/use-django-auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,9 +9,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronsLeftRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { useDjangoAuth } from "@/hooks/use-django-auth";
 import { useAuthStore } from "@/app/store";
 
 const defaultAvatar =
@@ -20,24 +19,30 @@ const defaultAvatar =
 export const UserItem = () => {
   const { user } = useAuthStore();
   const { logout } = useDjangoAuth();
-  const router = useRouter();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div
           role="button"
           className="flex items-center text-sm p-3 w-full hover:bg-primary/5"
+          data-testid="user-item trigger"
         >
           <div className="gap-x-2 flex items-center max-w-[150px]">
-            <Avatar className="h-5 w-5">
+            <Avatar className="h-5 w-5" data-testid="avatar">
               <AvatarImage src={user.avatar || defaultAvatar} />
             </Avatar>
-            <span className="text-start font-medium line-clamp-1">
+            <span
+              className="text-start font-medium line-clamp-1"
+              data-testid="user"
+            >
               {user?.username.charAt(0).toUpperCase() + user?.username.slice(1)}
               &apos;s Notion
             </span>
           </div>
-          <ChevronsLeftRight className="rotate-90 ml-2 text-muted-foreground h-4 w-4" />
+          <ChevronsLeftRight
+            className="rotate-90 ml-2 text-muted-foreground h-4 w-4"
+            data-testid="chevrons"
+          />
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -70,7 +75,7 @@ export const UserItem = () => {
           asChild
           className="w-full cursor-pointer text-muted-foreground"
         >
-          <Button onClick={logout} variant={"outline"}>
+          <Button onClick={logout} variant={"outline"} data-testid="logout">
             Log out
           </Button>
         </DropdownMenuItem>

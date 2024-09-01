@@ -4,9 +4,9 @@ import { useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { CoverImageModal } from "@/components/modals/cover-image-modal";
 import { Toolbar } from "@/components/toolbar";
-import { useSearchQuery } from "@/hooks/use-search-query";
 import { Cover } from "@/components/cover";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSearchQuery } from "@/hooks/use-search-query";
 import { useDocumentsMutate } from "@/hooks/use-documents-mutate";
 
 interface DocumentIdPageProps {
@@ -33,7 +33,7 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
 
   if (!byIdDocument) {
     return (
-      <div>
+      <div data-testid="skeletons">
         <Cover.Skeleton />
         <div className="md:max-w-3xl lg:max-w-4xl mx-auto mt-10">
           <div className="space-y-4 pl-8 pt-4">
